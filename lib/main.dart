@@ -1,12 +1,17 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:schedule/screens/CarouselScreen.dart';
-import 'package:schedule/screens/Courses.dart';
 import 'package:schedule/screens/Dashboard.dart';
+import 'package:schedule/screens/GoogleLogin.dart';
+import 'package:schedule/screens/HomeScreen.dart';
 import 'package:schedule/screens/LoginScreen.dart';
-import 'package:schedule/screens/SignUp.dart';
-import 'package:schedule/screens/SplashScreen.dart';
+import 'package:schedule/screens/ProfileScreen.dart';
+import 'package:schedule/screens/SettingScreen.dart';
+import 'firebase_options.dart';
 
-void main() {
+void main() /*async*/ {
+  // await Firebase.initializeApp(
+  //   options: DefaultFirebaseOptions.currentPlatform,
+  // );
   runApp(const MyApp());
 }
 
@@ -16,15 +21,14 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      color: Colors.white,
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.white),
-        useMaterial3: true,
-      ),
-      debugShowCheckedModeBanner: true,
-      home: SplashScreen(),
-    );
+        color: Colors.white,
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.white),
+          useMaterial3: true,
+        ),
+        debugShowCheckedModeBanner: true,
+        home: LoginScreen());
   }
 }
 

@@ -1,7 +1,11 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:liquid_progress_indicator_v2/liquid_progress_indicator.dart';
+import 'package:schedule/screens/ChatList.dart';
+import 'package:schedule/screens/ChatScreen.dart';
+import 'package:schedule/utils/Timer.dart';
 
 Color appColor() {
   return Color.fromRGBO(87, 51, 83, 1);
@@ -62,19 +66,18 @@ bottomNavigationBar(BuildContext context, Widget move) {
           label: '',
         ),
       ],
-      backgroundColor:
-          Colors.transparent, // Set background color to transparent
+      backgroundColor: Colors.transparent,
       unselectedItemColor: Colors.grey,
       fixedColor: Colors.red,
       onTap: (index) {
-        //   setState(() {
-        //     if (index == 0) {
-        //       navigationFuncPush(context, move);
-        //     }
-        //     if (index == 1) {
-        //       navigationFuncPush(context, move);
-        //     }
-        //   });
+        // setState(() {
+        //   if (index == 0) {
+        //     navigationFuncPush(context, move);
+        //   }
+        //   if (index == 1) {
+        //     navigationFuncPush(context, move);
+        //   }
+        // });
       },
     ),
   );
@@ -140,6 +143,42 @@ navigationFuncPush(BuildContext context, Widget widget) {
       .push(MaterialPageRoute(builder: (builder) => widget));
 }
 
+Widget loginEmailEt(Color background, IconData icon, String hint,
+    TextEditingController textEditingController) {
+  return Container(
+    height: 42,
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(15),
+      color: background, // Set background color
+    ),
+    margin: EdgeInsets.only(left: 15, right: 15, top: 8),
+    child: TextFormField(
+      controller: textEditingController,
+      onTap: () {},
+      cursorColor: etTextColor,
+      maxLines: 1,
+      style: TextStyle(
+        fontSize: 15,
+        fontWeight: FontWeight.w700,
+        color: Colors.black,
+      ),
+      decoration: InputDecoration(
+          filled: true,
+          fillColor: Colors.transparent,
+          border: InputBorder.none,
+          hintText: hint,
+          hintStyle: TextStyle(
+            color: Colors.grey,
+            fontWeight: FontWeight.w500,
+          ),
+          prefixIcon: Icon(icon),
+          prefixIconColor: Colors.grey,
+          suffixText: CountdownTimer()),
+      keyboardType: TextInputType.emailAddress,
+    ),
+  );
+}
+
 Widget emailEt(Color background, IconData icon, String hint) {
   return Container(
     height: 42,
@@ -149,6 +188,7 @@ Widget emailEt(Color background, IconData icon, String hint) {
     ),
     margin: EdgeInsets.only(left: 15, right: 15, top: 8),
     child: TextFormField(
+      onTap: () {},
       cursorColor: etTextColor,
       maxLines: 1,
       style: TextStyle(
@@ -158,7 +198,7 @@ Widget emailEt(Color background, IconData icon, String hint) {
       ),
       decoration: InputDecoration(
         filled: true,
-        fillColor: Colors.transparent, // Set transparent fill color
+        fillColor: Colors.transparent,
         border: InputBorder.none,
         hintText: hint,
         hintStyle: TextStyle(
@@ -173,7 +213,7 @@ Widget emailEt(Color background, IconData icon, String hint) {
   );
 }
 
-Widget passwordEt(Color color) {
+passwordEt(Color color, TextEditingController passTextEditController) {
   return Container(
     height: 42,
     decoration: BoxDecoration(
@@ -182,31 +222,31 @@ Widget passwordEt(Color color) {
     ),
     margin: EdgeInsets.only(left: 15, right: 15, top: 10),
     child: TextFormField(
+      controller: passTextEditController,
       cursorColor: etTextColor,
-      maxLines: 1,
       style: TextStyle(
-        fontSize: 17,
+        fontSize: 15,
         fontWeight: FontWeight.w700,
-        color: etTextColor,
+        color: Colors.black,
       ),
       decoration: InputDecoration(
         filled: true,
         fillColor: Colors.transparent,
-        // Set transparent fill color
         border: InputBorder.none,
-        hintText: "Password",
+        hintText: "Enter OTP",
         hintStyle: TextStyle(
           fontSize: 15,
           color: Colors.grey,
           fontWeight: FontWeight.w500,
         ),
-        // prefixIconColor: Color.fromRGBO(253, 167, 88, .7),
         prefixIconColor: Colors.grey,
-        prefixIcon: Icon(Icons.lock_open),
-        suffixText: "Show",
-        // suffixStyle: TextStyle(color: Colors.black),
+        prefixIcon: Icon(Icons.password),
       ),
-      keyboardType: TextInputType.visiblePassword,
+      inputFormatters: <TextInputFormatter>[
+        FilteringTextInputFormatter.digitsOnly,
+        LengthLimitingTextInputFormatter(4)
+      ],
+      keyboardType: TextInputType.phone,
     ),
   );
 }
@@ -220,6 +260,18 @@ appNormalText(String text) {
       color: appColor(),
     ),
     textAlign: TextAlign.center,
+  );
+}
+
+appCourseContainerText(String text) {
+  return Text(
+    text,
+    style: TextStyle(
+      fontSize: 16,
+      fontWeight: FontWeight.w700,
+      color: appColor(),
+    ),
+    textAlign: TextAlign.start,
   );
 }
 
@@ -288,10 +340,8 @@ progressBox(double progress, Color progressColor) {
           offset: Offset(-50.0, 50.0),
           child: LiquidLinearProgressIndicator(
             value: progress,
-            valueColor: AlwaysStoppedAnimation(
-                progressColor), // Defaults to the current Theme's accentColor.
-            backgroundColor: Colors
-                .white, // Defaults to the current Theme's backgroundColor.
+            valueColor: AlwaysStoppedAnimation(progressColor),
+            backgroundColor: Colors.white,
             borderColor: Colors.red,
             borderWidth: 0,
             borderRadius: 12.0,
@@ -346,12 +396,99 @@ routineProgress(double progress, Color color, secondColor) {
           begin: Alignment.bottomLeft,
           end: Alignment.topRight,
           colors: [
-            color,
-            secondColor
+            color, secondColor
             //Colors.greenAccent.shade100 // top Right part
           ],
         ),
       ),
     ),
+  );
+}
+
+// bool isExpended = true;
+appBar(BuildContext context, String title, bool isExpended, bool showMenu,
+    bool backVisibility) {
+  //isExpended = false;
+  final IconData = isExpended
+      ? CircleAvatar(
+          radius: 20,
+          backgroundImage: AssetImage("assets/images/user_icon.png"),
+        )
+      : Icon(Icons.message);
+
+  final menuIcon = showMenu
+      ? Image(
+          image: AssetImage("assets/images/menu_icon.png"),
+        )
+      : Image(
+          image: AssetImage("assets/images/back_btn.png"),
+        );
+
+  return AppBar(
+    backgroundColor: etBackground,
+    centerTitle: true,
+    title: Text(
+      title,
+      style: TextStyle(fontSize: 17),
+    ),
+    leading: Visibility(
+      visible: backVisibility,
+      child: InkWell(
+          onTap: () {
+            if (showMenu.toString().contains("false")) {
+              Navigator.of(context).pop(false);
+            }
+          },
+          child: menuIcon),
+    ),
+    actions: [
+      IconButton(
+          onPressed: () {
+            showMenu = !showMenu;
+            navigationFunc(context, ChatList());
+          },
+          icon: IconData)
+    ],
+  );
+}
+
+appProfileBar(String title, bool isExpended, bool showMenu) {
+  //isExpended = false;
+  final IconData = isExpended
+      ? CircleAvatar(
+          radius: 20,
+          backgroundColor: Colors.black,
+        )
+      : Icon(Icons.search);
+
+  final menuIcon = showMenu
+      ? Image(
+          image: AssetImage("assets/images/menu_icon.png"),
+        )
+      : Image(
+          image: AssetImage("assets/images/back_btn.png"),
+        );
+
+  return AppBar(
+    backgroundColor: Colors.deepOrange,
+    centerTitle: true,
+    title: Text(
+      title,
+      style: TextStyle(fontSize: 17, color: Colors.white),
+    ),
+    leading: menuIcon,
+    actions: [
+      IconButton(
+          onPressed: () {
+            showMenu = !showMenu;
+          },
+          icon: IconData)
+    ],
+  );
+}
+
+loadImage(String image) {
+  return Image(
+    image: AssetImage("assets/images/$image"),
   );
 }

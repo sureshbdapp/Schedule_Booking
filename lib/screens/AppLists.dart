@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-
 import '../utils/ClassWidgets.dart';
+import 'CourseScreen.dart';
 
 final List<Widget> svgList = [
   Padding(
@@ -68,4 +68,11 @@ final List<Widget> dogWalkList = [
   routineProgress(.5, Colors.indigo, Colors.indigo.shade50),
   routineProgress(.2, Colors.indigo, Colors.indigo.shade50),
   routineProgress(.8, Colors.indigo, Colors.indigo.shade50),
+];
+final List<Widget> cardList = [
+  courseCardView(),
+  courseCardView(),
+  courseCardView(),
+  courseCardView(),
+  courseCardView()
 ];

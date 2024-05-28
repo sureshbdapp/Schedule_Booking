@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:schedule/screens/SignUp.dart';
+import 'package:schedule/api/ApiClient.dart';
+import 'package:schedule/models/ResultModel.dart';
+import 'package:schedule/utils/AlertDailog.dart';
 import 'package:schedule/utils/ClassWidgets.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -10,6 +12,31 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  bool visibleOTP = false;
+  String? otp;
+  Future<void> login() async {
+    Map<String, String> map = {"mobile": "919829568999"};
+    final result = await ApiClient.loginApi(map);
+    if (result != null && result.success == true) {
+      otp = result.data?.otp.toString();
+      if (!visibleOTP && passTextEditController.text.isEmpty) {
+        myAlertDialog(context, "$otp");
+      }
+      setState(() {
+        visibleOTP = true;
+      });
+    } else {
+      setState(() {
+        visibleOTP = !visibleOTP;
+        visibleOTP = false;
+      });
+    }
+  }
+
+  // final api = await ApiClient.loginApi(map);
+  final TextEditingController textEditingController =
+      TextEditingController(text: "919829568999");
+  final TextEditingController passTextEditController = TextEditingController();
   @override
   @override
   Widget build(BuildContext context) {
@@ -151,8 +178,11 @@ class _LoginScreenState extends State<LoginScreen> {
                   // You can add other widgets here if needed
                 ),
               ),
-              emailEt(etBackground, Icons.email_outlined, "abc@gmail.com"),
-              passwordEt(etBackground),
+              loginEmailEt(etBackground, Icons.mobile_friendly, "000000000",
+                  textEditingController),
+              Visibility(
+                  visible: visibleOTP,
+                  child: passwordEt(etBackground, passTextEditController)),
               Container(
                 height: 45,
                 width: double.infinity,
@@ -167,8 +197,25 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
                   ),
-                  onPressed: () {
-                    navigationFunc(context, SignUp());
+                  onPressed: () async {
+                    if (passTextEditController.text.isEmpty &&
+                        visibleOTP == true) {
+                      ScaffoldMessenger.of(context)
+                          .showSnackBar(SnackBar(content: Text("Enter OTP")));
+                    } else {
+                      if (textEditingController.text.isNotEmpty &&
+                          passTextEditController.text.isNotEmpty) {
+                        if (otp == passTextEditController.text) {
+                          ScaffoldMessenger.of(context)
+                              .showSnackBar(SnackBar(content: Text("Success")));
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text("Invalid OTP")));
+                        }
+                      } else {
+                        login();
+                      }
+                    }
                   },
                   child: const Text(
                     "Login",
@@ -193,7 +240,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               InkWell(
                 onTap: () {
-                  navigationFunc(context, SignUp());
+                  // navigationFunc(context, SignUp());
                 },
                 child: Text(
                   "Don’t have an account? Sign up",

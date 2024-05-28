@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'Dashboard.dart';
 
-class CoursesScreen extends StatelessWidget {
-  const CoursesScreen({super.key});
+class CalenderUtil extends StatelessWidget {
+  const CalenderUtil({super.key});
 
   @override
   Widget build(BuildContext context) {

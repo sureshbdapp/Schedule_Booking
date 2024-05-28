@@ -1,6 +1,10 @@
 import 'package:date_picker_timeline/date_picker_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:schedule/dailogs/StartButtonDailog.dart';
+import 'package:schedule/screens/CommunityScreen.dart';
+import 'package:schedule/screens/CourseScreen.dart';
+import 'package:schedule/screens/LoginScreen.dart';
+import 'package:schedule/screens/SettingScreen.dart';
 import 'package:schedule/utils/ClassWidgets.dart';
 import 'AppLists.dart';
 
@@ -12,6 +16,7 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
+  int _currentIndex = 0;
   DatePickerController datePickerController = DatePickerController();
   bool isExpended = false;
   Image addImage = Image(
@@ -31,90 +36,8 @@ class _DashboardState extends State<Dashboard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: Stack(children: [
-        AnimatedSwitcher(
-          duration: Duration(milliseconds: 300),
-          transitionBuilder: (child, animation) {
-            return ScaleTransition(
-              scale: animation,
-              child: child,
-            );
-          },
-          child: InkWell(
-            onTap: () {
-              floatButtonAnimate();
-            },
-            child: SizedBox(
-              height: 65,
-              width: 65,
-              child: isExpended ? closeImage : addImage,
-            ),
-          ),
-        ),
-        Visibility(
-          visible: false,
-          child: showDashBoardDailog(),
-        ),
-      ]),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      bottomNavigationBar: BottomAppBar(
-        shape: CircularNotchedRectangle(),
-        padding: EdgeInsets.symmetric(horizontal: 5),
-        height: 60,
-        surfaceTintColor: Colors.white,
-        notchMargin: 12,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            SizedBox(
-              height: 30,
-              width: 60,
-              child: Image(
-                image: AssetImage("assets/images/tent_icon.png"),
-              ),
-            ),
-            Container(
-              height: 30,
-              width: 60,
-              margin: EdgeInsets.only(right: 35),
-              child: Image(
-                image: AssetImage("assets/images/bottom_nav_clock.png"),
-              ),
-            ),
-            SizedBox(
-              height: 30,
-              width: 60,
-              child: Image(
-                image: AssetImage("assets/images/bottom_nav_community.png"),
-              ),
-            ),
-            SizedBox(
-              height: 30,
-              width: 60,
-              child: Image(
-                image: AssetImage("assets/images/setting_icon.png"),
-              ),
-            ),
-          ],
-        ),
-      ),
       backgroundColor: etBackground,
-      appBar: AppBar(
-        backgroundColor: etBackground,
-        centerTitle: true,
-        title: Text("Homepage"),
-        leading: const Image(
-          image: AssetImage("assets/images/menu_icon.png"),
-        ),
-        actions: [
-          IconButton(
-              onPressed: () {},
-              icon: const CircleAvatar(
-                radius: 20,
-                backgroundColor: Colors.black,
-              )),
-        ],
-      ),
+      appBar: appBar(context, "Homepage", false, true, true),
       body: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,

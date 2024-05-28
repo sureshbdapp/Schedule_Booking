@@ -13,6 +13,7 @@ class SignUp extends StatefulWidget {
 
 class _SignUpState extends State<SignUp> {
   bool isChecked = true;
+  final TextEditingController passTextEditController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,7 +43,7 @@ class _SignUpState extends State<SignUp> {
               ),
               emailEt(Colors.white, CupertinoIcons.person, "Username"),
               emailEt(Colors.white, Icons.email_outlined, "Email"),
-              passwordEt(Colors.white),
+              passwordEt(Colors.white, passTextEditController),
               SizedBox(
                 height: 5,
               ),
