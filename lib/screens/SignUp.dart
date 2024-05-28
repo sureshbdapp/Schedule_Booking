@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:schedule/screens/LoginScreen.dart';
 import 'package:schedule/utils/ClassWidgets.dart';
-
 import 'Dashboard.dart';
 
 class SignUp extends StatefulWidget {
@@ -196,14 +196,19 @@ class _SignUpState extends State<SignUp> {
               SizedBox(
                 height: 5,
               ),
-              Text(
-                "Already have an account? Sign In",
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w700,
-                  color: appColor(),
+              InkWell(
+                onTap: () {
+                  navigationFuncPush(context, LoginScreen());
+                },
+                child: Text(
+                  "Already have an account? Sign In",
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w700,
+                    color: appColor(),
+                  ),
+                  textAlign: TextAlign.center,
                 ),
-                textAlign: TextAlign.center,
               ),
               SizedBox(
                 height: 10,

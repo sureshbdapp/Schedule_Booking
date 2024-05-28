@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:schedule/api/ApiClient.dart';
 import 'package:schedule/models/ResultModel.dart';
+import 'package:schedule/screens/Dashboard.dart';
 import 'package:schedule/utils/AlertDailog.dart';
 import 'package:schedule/utils/ClassWidgets.dart';
+
+import 'SignUp.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -208,6 +211,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         if (otp == passTextEditController.text) {
                           ScaffoldMessenger.of(context)
                               .showSnackBar(SnackBar(content: Text("Success")));
+                          navigationFunc(context, Dashboard());
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(content: Text("Invalid OTP")));
@@ -240,7 +244,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               InkWell(
                 onTap: () {
-                  // navigationFunc(context, SignUp());
+                  navigationFuncPush(context, SignUp());
                 },
                 child: Text(
                   "Don’t have an account? Sign up",
