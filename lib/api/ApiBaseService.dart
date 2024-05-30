@@ -37,7 +37,7 @@ const String SEARCH_CUSTOMER = "/api/v1/search/customers?search=";
 const String DASHBOARD_API = "/api/v1/dashboard";
 
 class ApiBaseService {
-  static const String BASE_URL = "http://38.242.216.41:8000";
+  static const String BASE_URL = "http://18.232.27.198/motus_dev_api";
 
   static late http.Client client;
 

@@ -1,13 +1,18 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:schedule/api/ApiBaseService.dart';
 import 'package:schedule/api/ApiClient.dart';
 import 'package:schedule/models/ApiResponse.dart';
 import 'package:schedule/models/ResponseLogin.dart';
 import 'package:schedule/screens/Dashboard.dart';
 import 'package:schedule/screens/HomeScreen.dart';
 import 'package:schedule/utils/AlertDailog.dart';
+import 'package:schedule/utils/AppLoader.dart';
 import 'package:schedule/utils/ClassWidgets.dart';
 import 'package:schedule/utils/PreferenceManager.dart';
 
+import '../utils/Constant.dart';
 import 'SignUp.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -21,27 +26,83 @@ class _LoginScreenState extends State<LoginScreen> {
   bool visibleOTP = false;
   String? otp;
 
-  Future<void> login() async {
-    Map<String, String> map = {"mobile": "919829568999"};
-    final result = await ApiClient.loginApi(context, map);
-    ApiResponse<ResponseLogin>? futureResponse =
-        await ApiClient.loginApi(context, map);
+  Future<void> loginApi() async {
+    AppLoader.show(context);
 
-    if (futureResponse.success == true) {
-      otp = futureResponse.data!.otp.toString();
-      if (!visibleOTP && passTextEditController.text.isEmpty) {
-        myAlertDialog(context, "$otp");
+    ApiBaseService()
+        .post(
+            body: jsonEncode({
+              'mobile': textEditingController.text
+              // 'password': passTextEditController
+            }),
+            path: "/login/mobile",
+            tokenRequired: false)
+        .then((value) {
+      var defaultResponse = ApiResponse<ResponseLogin>.fromJson(
+          jsonDecode(value.body), (data) => ResponseLogin.fromJson(data));
+      if (defaultResponse.success!) {
+        if (defaultResponse.data != null) {
+          AppLoader.hide(context);
+          otp = defaultResponse.data!.otp.toString();
+          PreferenceManager.setAccessToken(defaultResponse.data!.token);
+          if (!visibleOTP && passTextEditController.text.isEmpty) {
+            myAlertDialog(context, "$otp");
+            setState(() {
+              visibleOTP = true;
+            });
+          } else {
+            setState(() {
+              visibleOTP = !visibleOTP;
+              visibleOTP = false;
+            });
+          }
+
+          // UserDetails userDetails=UserDetails.fromJson(defaultResponse.data!);
+          // userDetails.accessToken=token;
+          // userDetails.refreshToken=refreshToken;
+          // AppDelegate().userDetails=userDetails;
+          // PreferenceManager.saveUser(userDetails);
+          // PreferenceManager.setAccessToken(token);
+
+          print("userDetails.toJson().toString()");
+          // navigationFunc(context, Dashboard());
+          // Navigator.of(context).pushReplacement(
+          //     CustomRoute(builder: (context) => DashBoardPage()));
+        } else {
+          showToast("User Profile details not found");
+          AppLoader.hide(context);
+        }
+      } else {
+        showToast(defaultResponse.message.toString());
+        AppLoader.hide(context);
       }
-      setState(() {
-        visibleOTP = true;
-      });
-    } else {
-      setState(() {
-        visibleOTP = !visibleOTP;
-        visibleOTP = false;
-      });
-    }
+    }).catchError((onError) {
+      AppLoader.hide(context);
+      print("Error: " + onError.toString());
+    });
   }
+
+  // Future<void> login() async {
+  //   Map<String, String> map = {"mobile": "919829568999"};
+  //   final result = await ApiClient.loginApi(context, map);
+  //   ApiResponse<ResponseLogin>? futureResponse =
+  //       await ApiClient.loginApi(context, map);
+  //
+  //   if (futureResponse.success == true) {
+  //     otp = futureResponse.data!.otp.toString();
+  //     if (!visibleOTP && passTextEditController.text.isEmpty) {
+  //       myAlertDialog(context, "$otp");
+  //     }
+  //     setState(() {
+  //       visibleOTP = true;
+  //     });
+  //   } else {
+  //     setState(() {
+  //       visibleOTP = !visibleOTP;
+  //       visibleOTP = false;
+  //     });
+  //   }
+  // }
 
   // final api = await ApiClient.loginApi(map);
   final TextEditingController textEditingController =
@@ -224,7 +285,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               SnackBar(content: Text("Invalid OTP")));
                         }
                       } else {
-                        login();
+                        loginApi();
                       }
                     }
                   },

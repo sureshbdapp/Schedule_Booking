@@ -1,6 +1,6 @@
 class ResponseLogin {
   String? _otp;
-  String? _token;
+  String _token = "";
 
   ResponseLogin({String? otp, String? token}) {
     if (otp != null) {
@@ -13,8 +13,8 @@ class ResponseLogin {
 
   String? get otp => _otp;
   set otp(String? otp) => _otp = otp;
-  String? get token => _token;
-  set token(String? token) => _token = token;
+  String get token => _token;
+  set token(String token) => _token = token;
 
   ResponseLogin.fromJson(Map<String, dynamic> json) {
     _otp = json['otp'];
