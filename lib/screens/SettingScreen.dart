@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:schedule/screens/LoginScreen.dart';
+import 'package:schedule/utils/AlertDailog.dart';
 import 'package:schedule/utils/ClassWidgets.dart';
+import 'package:schedule/utils/PreferenceManager.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
@@ -154,6 +157,23 @@ class SettingsPage extends StatelessWidget {
                 icon: Icons.info,
                 title: 'About',
                 onTap: () {},
+              ),
+            ),
+            SizedBox(
+              height: 5,
+            ),
+            Container(
+              margin: EdgeInsets.symmetric(horizontal: 10),
+              decoration: BoxDecoration(
+                  color: Colors.white, borderRadius: BorderRadius.circular(10)),
+              child: SettingsTile(
+                icon: Icons.info_outline,
+                title: 'Logout',
+                onTap: () {
+                  navigationFunc(context, LoginScreen());
+                  PreferenceManager.setAccessToken("");
+                  mySnackBar(context, "Logout successful");
+                },
               ),
             ),
           ],

@@ -129,7 +129,7 @@ class ProfilePage extends StatelessWidget {
                       },
                       child: Text(
                         'Logout',
-                        style: TextStyle(color: Colors.white, fontSize: 18),
+                        style: TextStyle(color: Colors.black, fontSize: 18),
                       ),
                     ),
                   ),

@@ -2,6 +2,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:schedule/screens/Dashboard.dart';
+import 'package:schedule/screens/HomeScreen.dart';
+import 'package:schedule/screens/LoginScreen.dart';
+import 'package:schedule/utils/PreferenceManager.dart';
 import 'CarouselScreen.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -17,8 +20,14 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
     // SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
     Timer(const Duration(seconds: 3), () {
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => CarouselScreen()));
+      if (PreferenceManager.getAccessToken().toString().isEmpty &&
+          PreferenceManager.getAccessToken().toString().contains("")) {
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => CarouselScreen()));
+      } else {
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => LoginScreen()));
+      }
     });
   }
 

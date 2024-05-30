@@ -1,30 +1,96 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:connectivity/connectivity.dart';
+import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:schedule/models/ResultModel.dart';
+import 'package:http_interceptor/http/intercepted_client.dart';
+import 'package:schedule/models/ApiResponse.dart';
+import 'package:schedule/models/ResponseLogin.dart';
+import 'package:schedule/utils/AlertDailog.dart';
+
+import 'LoggingInterceptor.dart';
 
 String apiKey = 'fafacb4ff62a439a88f32231bd112ec5';
 String baseUrl = "http://18.232.27.198/motus_dev_api/";
 
 class ApiClient {
-  static Future<ResultModel?> loginApi(Map<String, String> map) async {
+  static late http.Client client;
+
+  String getApiEndPoint(String endPoint) {
+    return baseUrl + endPoint;
+  }
+
+  static Future<bool> checkInternetConnectivity() async {
+    var connectivityResult = await (Connectivity().checkConnectivity());
+    return connectivityResult != ConnectivityResult.none;
+  }
+
+  ApiClient() {
+    // client=http.Client();
+    client = InterceptedClient.build(interceptors: [
+      LoggingInterceptor(),
+    ]);
+  }
+  static getHttpClient() {
+    return client;
+  }
+
+  static Future<ApiResponse<ResponseLogin>> loginApi(
+      BuildContext context, Map<String, dynamic> map) async {
     final uri = Uri.parse("$baseUrl/login/mobile");
 
+    bool isConnected = await checkInternetConnectivity();
+    if (!isConnected) {
+      showToast('No internet connection');
+      throw Exception('No internet connection');
+    }
+
+    final apiResponse = await http.post(uri, body: map);
     try {
-      final apiResponse = await http.post(uri, body: map);
       if (apiResponse.statusCode == 200) {
-        Map<String, dynamic> jsonData = jsonDecode(apiResponse.body);
-        return ResultModel.fromJson(jsonData);
+        return ApiResponse<ResponseLogin>.fromJson(jsonDecode(apiResponse.body),
+            (data) => ResponseLogin.fromJson(data));
       } else {
         print('Status code: ${apiResponse.statusCode}');
-        print('Response body: ${apiResponse.body}');
+        // print('Response body: ${apiResponse.body}');
       }
     } catch (error) {
       print('Error: $error');
+      mySnackBar(context, "$error");
     }
-    return null;
+    print("vhjgughj");
+    return ApiResponse<ResponseLogin>();
   }
 }
+
+//   static Future<DefaultResponse?> dashboardApi() async {
+//     final uri = Uri.parse("$baseUrl/dashboard");
+//     final token = PreferenceManager.getAccessToken();
+//     try {
+//       final response = await http.post(uri, headers: {
+//         'Content-Type': 'application/json',
+//         'Accept': 'application/json',
+//         'Authorization': 'Bearer $token'
+//       });
+//       if (response.statusCode == 200) {
+//         Map<String, dynamic> jsonData = jsonDecode(response.body);
+//         final ApiResponse defaultResponse = ApiResponse.fromJson(jsonData);
+//         // final List<ResponseDashboard> list = defaultResponse.data[ResponseDashboard];
+//         final List<dynamic> getApiList = defaultResponse.data;
+//         // String data = jsonData.toString().
+//         // List<DefaultResponse<ResponseDashboard>>
+//         return DefaultResponse.fromJson(jsonData);
+//       } else {
+//         print('Status code: ${response.statusCode}');
+//         print('Response body: ${response.body}');
+//       }
+//     } catch (error) {
+//       print('Error: $error');
+//     }
+//     return null;
+//   }
+// }
 
 // static Future<List<Results>> apiTrendingDataList() async {
 //   final url = Uri.parse("$baseUrl$endpoint?api_key=$apiKey");
@@ -103,18 +169,18 @@ class ApiClient {
 //     return [];
 //   }
 
-Future<Map<String, dynamic>> loginApi(Map<String, String> map) async {
-  final url = Uri.parse(baseUrl);
-  final httpResponse = await http.post(url, body: map);
-
-  try {
-    if (httpResponse.statusCode == 200) {
-      Map<String, dynamic> apiResponse = jsonDecode(httpResponse.body);
-      print('Login successfully');
-      return apiResponse;
-    }
-  } catch (e) {
-    print(e);
-  }
-  return {}; // or return null;
-}
+// Future<Map<String, dynamic>> loginApi(Map<String, String> map) async {
+//   final url = Uri.parse(baseUrl);
+//   final httpResponse = await http.post(url, body: map);
+//
+//   try {
+//     if (httpResponse.statusCode == 200) {
+//       Map<String, dynamic> apiResponse = jsonDecode(httpResponse.body);
+//       print('Login successfully');
+//       return apiResponse;
+//     }
+//   } catch (e) {
+//     print(e);
+//   }
+//   return {}; // or return null;
+// }

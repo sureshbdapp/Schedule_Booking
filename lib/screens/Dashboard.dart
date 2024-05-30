@@ -1,10 +1,8 @@
 import 'package:date_picker_timeline/date_picker_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:schedule/dailogs/StartButtonDailog.dart';
-import 'package:schedule/screens/CommunityScreen.dart';
-import 'package:schedule/screens/CourseScreen.dart';
-import 'package:schedule/screens/LoginScreen.dart';
-import 'package:schedule/screens/SettingScreen.dart';
+import 'package:schedule/api/ApiClient.dart';
+import 'package:schedule/models/ApiResponse.dart';
+import 'package:schedule/models/ResponseDashboard.dart';
 import 'package:schedule/utils/ClassWidgets.dart';
 import 'AppLists.dart';
 
@@ -32,6 +30,41 @@ class _DashboardState extends State<Dashboard> {
       isExpended = !isExpended;
     });
   }
+
+  // dashboardApi() {
+  //   return FutureBuilder<ApiResponse?>(
+  //       future: ApiClient.dashboardApi(),
+  //       builder: (context, snapshot) {
+  //         if (snapshot.connectionState == ConnectionState.waiting) {
+  //           return Center(child: CircularProgressIndicator());
+  //         } else if (snapshot.hasError) {
+  //           return Center(child: Text('Error: ${snapshot.error}'));
+  //         } else if (!snapshot.hasData || snapshot.data == null) {
+  //           return Center(child: Text('No Data Available'));
+  //         } else {
+  //           final data = snapshot.data!;
+  //           final List<ResponseDashboard> re = data.data[ResponseDashboard];
+  //           return ListView(
+  //             children: [
+  //               ...data.notification.map((n) => ListTile(
+  //                     title: Text(n.slug),
+  //                     subtitle: Text(n.createdAt.toString()),
+  //                   )),
+  //               ...data.sessions.map((s) => ListTile(
+  //                     title: Text(s.title),
+  //                     subtitle: Text(s.sessionDate.toString()),
+  //                   )),
+  //               ...data.banners.map((b) => ListTile(
+  //                     title: Text(b.title),
+  //                     leading: Image.network(b.image),
+  //                   )),
+  //             ],
+  //           );
+  //         }
+  //       });
+  //
+  //   // String response = data.data
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -101,6 +134,7 @@ class _DashboardState extends State<Dashboard> {
             SizedBox(
               height: 5,
             ),
+            // Text()
             // showDashBoardDailog(),
           ],
         ),

@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:schedule/api/ApiClient.dart';
-import 'package:schedule/models/ResultModel.dart';
+import 'package:schedule/models/ApiResponse.dart';
+import 'package:schedule/models/ResponseLogin.dart';
 import 'package:schedule/screens/Dashboard.dart';
+import 'package:schedule/screens/HomeScreen.dart';
 import 'package:schedule/utils/AlertDailog.dart';
 import 'package:schedule/utils/ClassWidgets.dart';
+import 'package:schedule/utils/PreferenceManager.dart';
 
 import 'SignUp.dart';
 
@@ -17,11 +20,15 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   bool visibleOTP = false;
   String? otp;
+
   Future<void> login() async {
     Map<String, String> map = {"mobile": "919829568999"};
-    final result = await ApiClient.loginApi(map);
-    if (result != null && result.success == true) {
-      otp = result.data?.otp.toString();
+    final result = await ApiClient.loginApi(context, map);
+    ApiResponse<ResponseLogin>? futureResponse =
+        await ApiClient.loginApi(context, map);
+
+    if (futureResponse.success == true) {
+      otp = futureResponse.data!.otp.toString();
       if (!visibleOTP && passTextEditController.text.isEmpty) {
         myAlertDialog(context, "$otp");
       }
@@ -211,7 +218,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         if (otp == passTextEditController.text) {
                           ScaffoldMessenger.of(context)
                               .showSnackBar(SnackBar(content: Text("Success")));
-                          navigationFunc(context, Dashboard());
+                          navigationFunc(context, HomeScreen());
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(content: Text("Invalid OTP")));

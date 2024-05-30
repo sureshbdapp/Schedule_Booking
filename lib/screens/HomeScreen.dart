@@ -75,7 +75,7 @@ class _HomeScreenState extends State<HomeScreen> {
         padding: EdgeInsets.symmetric(horizontal: 5),
         height: 50,
         surfaceTintColor: Colors.white,
-        notchMargin: 8,
+        notchMargin: 50,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
