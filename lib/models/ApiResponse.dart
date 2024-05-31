@@ -5,7 +5,13 @@ class ApiResponse<T> {
 
   ApiResponse({this.success, this.data, this.message});
 
-  ApiResponse.fromJson(
+  ApiResponse.fromJson(Map<String, dynamic> json) {
+    success = json['success'];
+    data = json['data'] != null ? (json['data']) : null;
+    message = json['message'];
+  }
+
+  ApiResponse.fromJSON(
       Map<String, dynamic> json, T Function(Map<String, dynamic>) create) {
     success = json['success'];
     data = json['data'] != null ? create(json['data']) : null;

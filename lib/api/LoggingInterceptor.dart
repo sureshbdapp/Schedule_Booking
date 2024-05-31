@@ -64,7 +64,7 @@ class LoggingInterceptor implements InterceptorContract {
       if (NavigationService.navigatorKey.currentContext != null) {
         showToast("Your session is expired, please login again.");
         // access_token = "";
-        PreferenceManager.clearSharedPref();
+        // PreferenceManager.clearSharedPref();
         AppDelegate().reset();
         Navigator.pushAndRemoveUntil<dynamic>(
           NavigationService.navigatorKey.currentContext!,

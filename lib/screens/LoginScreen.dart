@@ -10,7 +10,9 @@ import 'package:schedule/screens/HomeScreen.dart';
 import 'package:schedule/utils/AlertDailog.dart';
 import 'package:schedule/utils/AppLoader.dart';
 import 'package:schedule/utils/ClassWidgets.dart';
+import 'package:schedule/utils/Pref.dart';
 import 'package:schedule/utils/PreferenceManager.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../utils/Constant.dart';
 import 'SignUp.dart';
@@ -25,8 +27,11 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   bool visibleOTP = false;
   String? otp;
-
+  String? saveToken;
   Future<void> loginApi() async {
+    Pref pref = Pref();
+    // PreferenceManager preferenceManager = PreferenceManager();
+    // final sharedToken = await SharedPreferences.getInstance();
     AppLoader.show(context);
 
     ApiBaseService()
@@ -38,13 +43,20 @@ class _LoginScreenState extends State<LoginScreen> {
             path: "/login/mobile",
             tokenRequired: false)
         .then((value) {
-      var defaultResponse = ApiResponse<ResponseLogin>.fromJson(
+      var defaultResponse = ApiResponse<ResponseLogin>.fromJSON(
           jsonDecode(value.body), (data) => ResponseLogin.fromJson(data));
       if (defaultResponse.success!) {
         if (defaultResponse.data != null) {
+          setState(() {
+            PreferenceManager().setAccessToken(defaultResponse.data!.token);
+            // preferenceManager.setAccessToken(defaultResponse.data!.token);
+            // pref.saveToken(defaultResponse.data!.token);
+            // sharedToken.setString(TOKEN_1, defaultResponse.data!.token);
+          });
           AppLoader.hide(context);
           otp = defaultResponse.data!.otp.toString();
-          PreferenceManager.setAccessToken(defaultResponse.data!.token);
+          // PreferenceManager.setAccessToken(defaultResponse.data!.token);
+
           if (!visibleOTP && passTextEditController.text.isEmpty) {
             myAlertDialog(context, "$otp");
             setState(() {
@@ -108,7 +120,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController textEditingController =
       TextEditingController(text: "919829568999");
   final TextEditingController passTextEditController = TextEditingController();
-  @override
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

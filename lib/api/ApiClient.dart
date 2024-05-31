@@ -49,7 +49,7 @@ class ApiClient {
     final apiResponse = await http.post(uri, body: map);
     try {
       if (apiResponse.statusCode == 200) {
-        return ApiResponse<ResponseLogin>.fromJson(jsonDecode(apiResponse.body),
+        return ApiResponse<ResponseLogin>.fromJSON(jsonDecode(apiResponse.body),
             (data) => ResponseLogin.fromJson(data));
       } else {
         print('Status code: ${apiResponse.statusCode}');

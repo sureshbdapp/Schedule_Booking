@@ -1,126 +1,118 @@
 import 'dart:convert';
-
 import 'package:shared_preferences/shared_preferences.dart';
 
 class PreferenceManager {
-  static const String ACCESS_TOKEN = "access_token";
-  static const doubleSharedPreference = "double shared preferences";
-  static const stringSharedPreference = "string shared preferences";
-  static const mapSharedPreference = "map shared preferences";
-  static const USERDATA = "userData";
-  static const ACTIVITIES_TYPES = "activitiesTypes";
-  static const REGIONS = "regions";
-  static const APP_LANGUAGE = "app_language";
-  static const CUSTOMER_TYPES = "customerTypes";
-  static const LEAD_STATUS_CATEGORIES = "lead_status_categories";
+  // static final PreferenceManager _manager = PreferenceManager._wait();
+  // PreferenceManager._wait();
+  static const String accessTokenKey = "access_token";
+  static const String userDataKey = "userData";
+  static const String activitiesTypesKey = "activitiesTypes";
+  static const String regionsKey = "regions";
+  static const String appLanguageKey = "app_language";
+  static const String customerTypesKey = "customerTypes";
+  static const String leadStatusCategoriesKey = "lead_status_categories";
+  static const String listSharedPreferenceKey = "list_shared_preferences";
+  static const String boolSharedPreferenceKey = "bool_shared_preferences";
 
-  static const listSharedPreference = "list shared preferences";
-  static const boolSharedPreference = "bool shared preferences";
-
-  static Future setBool(String key) async {
+  // Save boolean value
+  Future<void> setBool(String key, bool value) async {
     final prefs = await SharedPreferences.getInstance();
-    prefs.setBool(key, true);
+    await prefs.setBool(key, value);
   }
 
-  static Future<bool> getBool(String key, bool value) async {
+  // Retrieve boolean value
+  Future<bool> getBool(String key) async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getBool(key) ?? false;
   }
 
-  static Future setListString(
-      {required String id, required String token}) async {
+  // Save list of strings
+  Future<void> setListString(String key, List<String> value) async {
     final prefs = await SharedPreferences.getInstance();
-    prefs.setStringList(listSharedPreference, [id, token]);
+    await prefs.setStringList(key, value);
   }
 
-  static Future<List<String>> getListString() async {
+  // Retrieve list of strings
+  Future<List<String>> getListString(String key) async {
     final prefs = await SharedPreferences.getInstance();
-    return prefs.getStringList(listSharedPreference) ?? [];
+    return prefs.getStringList(key) ?? [];
   }
 
-  static Future<String> getString(String key) async {
+  // Save a string value
+  Future<void> setString(String key, String value) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(key, value);
+  }
+
+  // Retrieve a string value
+  Future<String> getString(String key) async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getString(key) ?? "";
   }
 
-  static Future<String> getAccessToken() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getString(ACCESS_TOKEN) ?? "";
+  // Save access token
+  Future<void> setAccessToken(String value) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString(accessTokenKey, value);
   }
 
-  static Future setAccessToken(String value) async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.setString(ACCESS_TOKEN, value);
+  // Retrieve access token
+  Future<String?> getAccessToken() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString(accessTokenKey);
   }
 
-  static Future setString(String key, String value) async {
+  // Save an integer value
+  Future<void> setInt(String key, int value) async {
     final prefs = await SharedPreferences.getInstance();
-    return prefs.setString(key, value);
+    await prefs.setInt(key, value);
   }
 
-  static Future setInt(String key, int val) async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.setInt(key, val);
-  }
-
-  static Future<int> getInt(String key) async {
+  // Retrieve an integer value
+  Future<int> getInt(String key) async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getInt(key) ?? 0;
   }
 
-  static Future setDouble(String key, double val) async {
+  // Save a double value
+  Future<void> setDouble(String key, double value) async {
     final prefs = await SharedPreferences.getInstance();
-    return prefs.setDouble(key, val);
+    await prefs.setDouble(key, value);
   }
 
-  static Future<double> getDouble(String key) async {
+  // Retrieve a double value
+  Future<double> getDouble(String key) async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getDouble(key) ?? 0.0;
   }
 
-  static Future setMap(String key, Map value) async {
+  // Save a map as a JSON string
+  Future<void> setMap(String key, Map value) async {
     final prefs = await SharedPreferences.getInstance();
-    return prefs.setString(key, jsonEncode(value));
+    await prefs.setString(key, jsonEncode(value));
   }
 
-  static Future<Map> getMap(String key) async {
+  // Retrieve a map from a JSON string
+  Future<Map<String, dynamic>> getMap(String key) async {
     final prefs = await SharedPreferences.getInstance();
-    return jsonDecode(prefs.getString(key) ?? "") ?? {};
+    return jsonDecode(prefs.getString(key) ?? "{}");
   }
 
-  static Future clearSharedPref() async {
+  // Clear all shared preferences
+  Future<void> clearSharedPref() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.clear();
   }
 
-  // static Future<void> saveUser(UserDetails userDetails) async {
-  //   final prefs = await SharedPreferences.getInstance();
-  //   String userJson = json.encode(userDetails.toJson());
-  //   prefs.setString(USERDATA, userJson);
-  // }
-  //
-  // static Future<UserDetails?> getUser() async {
-  //   final prefs = await SharedPreferences.getInstance();
-  //
-  //   String? userJson = prefs.getString(USERDATA);
-  //
-  //   if (userJson != null) {
-  //     // Convert JSON string to User object
-  //     UserDetails user = UserDetails.fromJson(json.decode(userJson));
-  //     return user;
-  //   } else {
-  //     print('User not found in SharedPreferences');
-  //   }
-  //   return null;
-  // }
-
-  static Future<void> saveDataList<T>(List<T> dataList, String keyName) async {
+  // Save a list of generic objects
+  Future<void> saveDataList<T>(List<T> dataList, String keyName) async {
     final prefs = await SharedPreferences.getInstance();
     final String data = jsonEncode(dataList);
-    prefs.setString(keyName, data);
+    await prefs.setString(keyName, data);
   }
 
-  static Future<List<T>> getDataList<T>(
+  // Retrieve a list of generic objects
+  Future<List<T>> getDataList<T>(
       String keyName, T Function(Map<String, dynamic>) fromJson) async {
     final prefs = await SharedPreferences.getInstance();
     final String? data = prefs.getString(keyName);
@@ -132,7 +124,7 @@ class PreferenceManager {
             .map<T>((item) => fromJson(item as Map<String, dynamic>))
             .toList();
       } catch (e) {
-        // Handle decoding errors (e.g., invalid JSON)
+        // Handle decoding errors
         print('Error decoding data: $e');
       }
     }

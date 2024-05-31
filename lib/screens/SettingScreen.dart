@@ -171,7 +171,7 @@ class SettingsPage extends StatelessWidget {
                 title: 'Logout',
                 onTap: () {
                   navigationFunc(context, LoginScreen());
-                  PreferenceManager.setAccessToken("");
+                  PreferenceManager().setAccessToken("");
                   mySnackBar(context, "Logout successful");
                 },
               ),

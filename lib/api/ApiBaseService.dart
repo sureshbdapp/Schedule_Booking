@@ -191,15 +191,15 @@ class ApiBaseService {
     return "$DELETE_PRODUCT_END$leadID&product_id=$productID";
   }
 
-  String getToken() {
-    String cashedToken = "";
-    PreferenceManager.getAccessToken().then((value) {
-      if (value.isNotEmpty) {
-        cashedToken = value;
-      }
-    });
-    return cashedToken;
-  }
+  // String getToken() {
+  //   String cashedToken = "";
+  //   PreferenceManager.getAccessToken().then((value) {
+  //     if (value.isNotEmpty) {
+  //       cashedToken = value;
+  //     }
+  //   });
+  //   return cashedToken;
+  // }
 
   Map<String, String> getHeaders({bool tokenRequired = false}) {
     Map<String, String> headers;
@@ -207,7 +207,7 @@ class ApiBaseService {
       headers = {
         'Content-Type': 'application/json; charset=UTF-8',
         'accept': 'application/json',
-        HttpHeaders.authorizationHeader: 'Bearer $access_token',
+        HttpHeaders.authorizationHeader: 'Bearer ${access_token}',
       };
     } else {
       headers = {

@@ -1,42 +1,49 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
-
+import 'package:schedule/api/ApiBaseService.dart';
+import 'package:schedule/models/ApiResponse.dart';
+import 'package:schedule/models/ResponseDashboard.dart';
 import '../utils/ClassWidgets.dart';
+import 'package:schedule/api/ApiBaseService.dart';
 
-class CommunityPage extends StatelessWidget {
-  final List<Map<String, String>> posts = [
-    {
-      "name": "Jerome",
-      "time": "41m ago",
-      "content":
-          "Man, you’re my new guru! Viewing the lessons for a second time. Thoroughly pleased. And impressed that you draw from scientific literature in telling memorable...",
-      "likes": "5k",
-      "comments": "20"
-    },
-    {
-      "name": "Gretchen",
-      "time": "41m ago",
-      "content":
-          "I loved the course! I’ve been trying to break all this great stuff down into manageable chunks to help my clients develop healthy habits and achieve their personal...",
-      "likes": "3k",
-      "comments": "15"
-    },
-    {
-      "name": "Al",
-      "time": "41m ago",
-      "content":
-          "This course contains the most complete material on habit formation that I’ve seen. There is just enough theory to explain the principles, and not so much...",
-      "likes": "2k",
-      "comments": "10"
-    },
-    {
-      "name": "Colin",
-      "time": "41m ago",
-      "content":
-          "James Clear’s Habit’s Academy course has tremendously changed my life for the better! Having been a self-improvement aficionado for decades...",
-      "likes": "4k",
-      "comments": "22"
-    },
-  ];
+class CommunityPage extends StatefulWidget {
+  const CommunityPage({super.key});
+
+  @override
+  State<CommunityPage> createState() => _CommunityPageState();
+}
+
+class _CommunityPageState extends State<CommunityPage> {
+  @override
+  void initState() {
+    super.initState();
+    dashboardApi();
+  }
+
+  late final List<ResponseDashboard> apiList = [];
+  Future<void> dashboardApi() async {
+    ApiBaseService()
+        .post(path: "/dashboard", tokenRequired: true)
+        .then((value) {
+      var response = ApiResponse.fromJson(jsonDecode(value.body));
+      print(response);
+      if (response.success! && response.data != null) {
+        final List<ResponseDashboard> resultsData = response.data['sessions'];
+        // final ResponseDashboard dsessions = Sessions.fromJson(resultsData.sessions)
+        print(resultsData);
+        //
+
+        // final List<Sessions> dList = resultsData.sessions.map((e) => Sessions.fromJson(e))
+        //     .toList();
+        // apiList.addAll(dList);
+        // final List<ResponseDashboard> dList =
+        // responseDashboard.sessions.map((e) => ResponseDashboard.fromJson(e)).toList();
+      }
+    }).catchError((onError) {
+      print("ERROR $onError");
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,23 +52,24 @@ class CommunityPage extends StatelessWidget {
       appBar: appBar(context, "Community", false, false, true),
       body: ListView.builder(
         padding: EdgeInsets.all(10),
-        itemCount: posts.length,
+        itemCount: apiList.length,
         itemBuilder: (context, index) {
-          final post = posts[index];
-          return CommunityPost(
-            name: post['name']!,
-            time: post['time']!,
-            content: post['content']!,
-            likes: post['likes']!,
-            comments: post['comments']!,
-          );
+          final post = apiList[index];
+          return Text(post.toString());
+          //   CommunityPost(
+          //   name: post['name']!,
+          //   time: post['time']!,
+          //   content: post['content']!,
+          //   likes: post['likes']!,
+          //   comments: post['comments']!,
+          // );
         },
       ),
     );
   }
 }
 
-class CommunityPost extends StatelessWidget {
+class CommunityPost extends State<CommunityPage> {
   final String name;
   final String time;
   final String content;

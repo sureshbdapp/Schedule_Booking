@@ -55,7 +55,7 @@ class _HomeScreenState extends State<HomeScreen> {
           },
           child: InkWell(
             onTap: () {
-              // floatButtonAnimate();
+              floatButtonAnimate();
             },
             child: SizedBox(
               height: 65,

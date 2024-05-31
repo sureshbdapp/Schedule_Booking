@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:schedule/api/ApiBaseService.dart';
 import 'package:schedule/screens/LoginScreen.dart';
 import 'package:schedule/utils/ClassWidgets.dart';
 
@@ -13,7 +14,6 @@ class CarouselScreen extends StatefulWidget {
 class _CarouselScreenState extends State<CarouselScreen> {
   final PageController _pageController = PageController(initialPage: 0);
   int _currentPage = 0;
-
   final List<Widget> _pages = [
     const OnboardingPage(
         title: "WELCOME TO Monumental habits",
