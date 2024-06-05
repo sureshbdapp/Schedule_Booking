@@ -4,8 +4,18 @@ import 'package:schedule/utils/AlertDailog.dart';
 import 'package:schedule/utils/ClassWidgets.dart';
 import 'package:schedule/utils/PreferenceManager.dart';
 
-class SettingsPage extends StatelessWidget {
+class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
+  @override
+  State<SettingsPage> createState() => _SettingsPageState();
+}
+
+class _SettingsPageState extends State<SettingsPage> {
+  @override
+  void initState() {
+    super.initState();
+    print("HEHEEHEHEHEH");
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -171,7 +181,7 @@ class SettingsPage extends StatelessWidget {
                 title: 'Logout',
                 onTap: () {
                   navigationFunc(context, LoginScreen());
-                  PreferenceManager().setAccessToken("");
+                  // PreferenceManager().setAccessToken("");
                   mySnackBar(context, "Logout successful");
                 },
               ),

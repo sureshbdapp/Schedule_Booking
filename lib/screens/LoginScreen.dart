@@ -45,10 +45,11 @@ class _LoginScreenState extends State<LoginScreen> {
         .then((value) {
       var defaultResponse = ApiResponse<ResponseLogin>.fromJSON(
           jsonDecode(value.body), (data) => ResponseLogin.fromJson(data));
-      if (defaultResponse.success!) {
+      if (defaultResponse.success == true) {
         if (defaultResponse.data != null) {
           setState(() {
             PreferenceManager().setAccessToken(defaultResponse.data!.token);
+            print("login token :" + defaultResponse.data!.token);
             // preferenceManager.setAccessToken(defaultResponse.data!.token);
             // pref.saveToken(defaultResponse.data!.token);
             // sharedToken.setString(TOKEN_1, defaultResponse.data!.token);

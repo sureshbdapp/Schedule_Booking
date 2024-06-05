@@ -1,12 +1,9 @@
-import 'package:date_picker_timeline/date_picker_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:schedule/screens/CommunityScreen.dart';
 
 import '../dailogs/StartButtonDailog.dart';
-import '../utils/ClassWidgets.dart';
 import 'CourseScreen.dart';
 import 'Dashboard.dart';
-import 'LoginScreen.dart';
 import 'SettingScreen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -24,7 +21,7 @@ class _HomeScreenState extends State<HomeScreen> {
     SettingsPage()
   ];
   int currentIndex = 0;
-  DatePickerController datePickerController = DatePickerController();
+  // DatePickerController datePickerController = DatePickerController();
   bool isExpended = false;
   Image addImage = Image(
     image: AssetImage("assets/images/plus_button.png"),

@@ -1,5 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:schedule/provider_examples/ProviderExampleScreen.dart';
+import 'package:schedule/provider_examples/ProviderNotifier.dart';
 import 'package:schedule/screens/Dashboard.dart';
 import 'package:schedule/screens/GoogleLogin.dart';
 import 'package:schedule/screens/HomeScreen.dart';
@@ -21,15 +24,18 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        color: Colors.white,
-        debugShowCheckedModeBanner: true,
-        home: SplashScreen());
+    return MultiProvider(
+      providers: [ChangeNotifierProvider(create: (_) => ProviderNotifier())],
+      child: const MaterialApp(
+          color: Colors.white,
+          debugShowCheckedModeBanner: true,
+          home: ProviderExampleScreen()),
+    );
   }
 }
+
 class NavigationService {
-  static GlobalKey<NavigatorState> navigatorKey =
-  GlobalKey<NavigatorState>();
+  static GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 }
 
 class NavigationProvider with ChangeNotifier {

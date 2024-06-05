@@ -15,7 +15,7 @@ class Dashboard extends StatefulWidget {
 
 class _DashboardState extends State<Dashboard> {
   int _currentIndex = 0;
-  DatePickerController datePickerController = DatePickerController();
+  // DatePickerController datePickerController = DatePickerController();
   bool isExpended = false;
   Image addImage = Image(
     image: AssetImage("assets/images/plus_button.png"),

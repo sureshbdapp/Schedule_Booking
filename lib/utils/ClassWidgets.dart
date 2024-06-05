@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:liquid_progress_indicator_v2/liquid_progress_indicator.dart';
+// import 'package:liquid_progress_indicator_v2/liquid_progress_indicator.dart';
 import 'package:schedule/screens/ChatList.dart';
 import 'package:schedule/screens/ChatScreen.dart';
 import 'package:schedule/utils/Timer.dart';
@@ -337,15 +337,15 @@ progressBox(double progress, Color progressColor) {
         angle: 45 * (pi / 180),
         child: Transform.translate(
           offset: Offset(-50.0, 50.0),
-          child: LiquidLinearProgressIndicator(
+          child: CircularProgressIndicator(
             value: progress,
             valueColor: AlwaysStoppedAnimation(progressColor),
             backgroundColor: Colors.white,
-            borderColor: Colors.red,
-            borderWidth: 0,
-            borderRadius: 12.0,
-            direction: Axis
-                .vertical, // The direction the liquid moves (Axis.vertical = bottom to top, Axis.horizontal = left to right). Defaults to Axis.horizontal.
+            // borderColor: Colors.red,
+            // borderWidth: 0,
+            // borderRadius: 12.0,
+            // direction: Axis
+            //     .vertical, // The direction the liquid moves (Axis.vertical = bottom to top, Axis.horizontal = left to right). Defaults to Axis.horizontal.
             // center: Text("Loading..."),
           ),
         ),

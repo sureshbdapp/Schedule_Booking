@@ -1,15 +1,15 @@
 class ResponseDashboard {
-  List<Notification>? notification;
+  List<Notifications>? notification;
   List<Sessions>? sessions;
   List<Banners>? banners;
 
   ResponseDashboard({this.notification, this.sessions, this.banners});
 
-  ResponseDashboard.fromJson(Map<String, dynamic> json) {
+  ResponseDashboard.fromJson(Map<dynamic, dynamic> json) {
     if (json['notification'] != null) {
-      notification = <Notification>[];
+      notification = <Notifications>[];
       json['notification'].forEach((v) {
-        notification!.add(Notification.fromJson(v));
+        notification!.add(Notifications.fromJson(v));
       });
     }
     if (json['sessions'] != null) {
@@ -41,7 +41,7 @@ class ResponseDashboard {
   }
 }
 
-class Notification {
+class Notifications {
   int? id;
   int? userId;
   int? conversationId;
@@ -55,7 +55,7 @@ class Notification {
   String? updatedAt;
   Null? deletedAt;
 
-  Notification(
+  Notifications(
       {this.id,
       this.userId,
       this.conversationId,
@@ -69,7 +69,7 @@ class Notification {
       this.updatedAt,
       this.deletedAt});
 
-  Notification.fromJson(Map<String, dynamic> json) {
+  Notifications.fromJson(Map<dynamic, dynamic> json) {
     id = json['id'];
     userId = json['user_id'];
     conversationId = json['conversation_id'];

@@ -1,11 +1,10 @@
 import 'dart:convert';
-
+// import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:schedule/api/ApiBaseService.dart';
 import 'package:schedule/models/ApiResponse.dart';
 import 'package:schedule/models/ResponseDashboard.dart';
 import '../utils/ClassWidgets.dart';
-import 'package:schedule/api/ApiBaseService.dart';
 
 class CommunityPage extends StatefulWidget {
   const CommunityPage({super.key});
@@ -15,34 +14,52 @@ class CommunityPage extends StatefulWidget {
 }
 
 class _CommunityPageState extends State<CommunityPage> {
+  List<Notifications> notifications = [];
+  List<ResponseDashboard> dashResponse = [];
+  List<Sessions> sessions = [];
+  List<Banners> banners = [];
+  bool isLoading = true;
+
   @override
   void initState() {
     super.initState();
+
     dashboardApi();
   }
 
-  late final List<ResponseDashboard> apiList = [];
   Future<void> dashboardApi() async {
-    ApiBaseService()
-        .post(path: "/dashboard", tokenRequired: true)
-        .then((value) {
-      var response = ApiResponse.fromJson(jsonDecode(value.body));
-      print(response);
-      if (response.success! && response.data != null) {
-        final List<ResponseDashboard> resultsData = response.data['sessions'];
-        // final ResponseDashboard dsessions = Sessions.fromJson(resultsData.sessions)
-        print(resultsData);
-        //
+    try {
+      final response =
+          await ApiBaseService().post(path: "/dashboard", tokenRequired: true);
+      final jsonResponse = jsonDecode(response.body);
+      ApiResponse apiResponse = ApiResponse.fromJson(jsonResponse);
+      if (apiResponse.success! && apiResponse.data != null) {
+        // for (Map j in apiResponse.data) {
+        //   ResponseDashboard responseDashboard = ResponseDashboard(
+        //       notification: j["notification"], banners: j["banners"]);
+        //   dashResponse.add(responseDashboard);
+        //   print(dashResponse);
+        // }
 
-        // final List<Sessions> dList = resultsData.sessions.map((e) => Sessions.fromJson(e))
-        //     .toList();
-        // apiList.addAll(dList);
-        // final List<ResponseDashboard> dList =
-        // responseDashboard.sessions.map((e) => ResponseDashboard.fromJson(e)).toList();
+        notifications.clear();
+        for (Map i in apiResponse.data["notification"]) {
+          notifications.add(Notifications.fromJson(i));
+        }
+        print("api dataaaaaaa $notifications");
+        setState(() {
+          isLoading = false;
+        });
+      } else {
+        setState(() {
+          isLoading = false;
+        });
       }
-    }).catchError((onError) {
-      print("ERROR $onError");
-    });
+    } catch (error) {
+      setState(() {
+        isLoading = false;
+      });
+      print("ERROR: $error");
+    }
   }
 
   @override
@@ -50,40 +67,41 @@ class _CommunityPageState extends State<CommunityPage> {
     return Scaffold(
       backgroundColor: etBackground,
       appBar: appBar(context, "Community", false, false, true),
-      body: ListView.builder(
-        padding: EdgeInsets.all(10),
-        itemCount: apiList.length,
-        itemBuilder: (context, index) {
-          final post = apiList[index];
-          return Text(post.toString());
-          //   CommunityPost(
-          //   name: post['name']!,
-          //   time: post['time']!,
-          //   content: post['content']!,
-          //   likes: post['likes']!,
-          //   comments: post['comments']!,
-          // );
-        },
-      ),
+      body: isLoading
+          ? Center(child: CircularProgressIndicator())
+          : ListView.builder(
+              padding: EdgeInsets.all(10),
+              itemCount: notifications.length,
+              itemBuilder: (context, index) {
+                final post = notifications[index];
+                return CommunityPost(
+                  name: post.receiverType ?? '',
+                  time: post.createdAt ?? '',
+                  content: post.slug ?? '',
+                  likes: post.status ?? '0',
+                  comments: post.id ?? 0,
+                );
+              },
+            ),
     );
   }
 }
 
-class CommunityPost extends State<CommunityPage> {
+class CommunityPost extends StatelessWidget {
   final String name;
   final String time;
   final String content;
   final String likes;
-  final String comments;
+  final int comments;
 
-  CommunityPost({
+  const CommunityPost({
+    Key? key,
     required this.name,
     required this.time,
     required this.content,
     required this.likes,
     required this.comments,
-  });
-
+  }) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -94,7 +112,7 @@ class CommunityPost extends State<CommunityPage> {
         borderRadius: BorderRadius.circular(10),
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Padding(
             padding: const EdgeInsets.all(8.0),
@@ -106,27 +124,26 @@ class CommunityPost extends State<CommunityPage> {
                       'assets/images/user_icon.png'), // Add your image asset
                 ),
                 SizedBox(width: 10),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      name,
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    Text(time),
-                  ],
+                Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        name,
+                        maxLines: 4,
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      Text(time),
+                    ],
+                  ),
                 ),
-                Spacer(),
-                Icon(
-                  Icons.share,
-                  color: Colors.grey,
-                )
+                Icon(Icons.share, color: Colors.grey),
               ],
             ),
           ),
-          Divider(
-            color: etBackground,
-          ),
+          Divider(color: etBackground),
           SizedBox(height: 5),
           Text(content),
           SizedBox(height: 10),
@@ -140,14 +157,12 @@ class CommunityPost extends State<CommunityPage> {
                   Text(likes),
                 ],
               ),
-              SizedBox(
-                width: 7,
-              ),
+              SizedBox(width: 7),
               Row(
                 children: [
                   Icon(Icons.comment, color: Colors.orange),
                   SizedBox(width: 3),
-                  Text(comments),
+                  Text(comments.toString()),
                 ],
               ),
             ],
