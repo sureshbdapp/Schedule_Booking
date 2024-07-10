@@ -49,7 +49,7 @@ class _LoginScreenState extends State<LoginScreen> {
         if (defaultResponse.data != null) {
           setState(() {
             PreferenceManager().setAccessToken(defaultResponse.data!.token);
-            print("login token :" + defaultResponse.data!.token);
+            print("login token :${defaultResponse.data!.token}");
             // preferenceManager.setAccessToken(defaultResponse.data!.token);
             // pref.saveToken(defaultResponse.data!.token);
             // sharedToken.setString(TOKEN_1, defaultResponse.data!.token);

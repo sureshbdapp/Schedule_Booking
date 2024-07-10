@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:schedule/provider_examples/ProviderNotifier.dart';
+
+import 'ProviderNotifier.dart';
 
 class ProviderExampleScreen extends StatefulWidget {
   const ProviderExampleScreen({super.key});
@@ -39,7 +40,7 @@ class _ProviderExampleScreenState extends State<ProviderExampleScreen> {
                 children: [
                   Expanded(
                       child: Container(
-                    height: MediaQuery.of(context).size.height * 1,
+                    height: 100,
                     color: Colors.blue.withOpacity(val.progressValue),
                   )),
                   Expanded(

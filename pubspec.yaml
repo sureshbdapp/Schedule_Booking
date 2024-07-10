@@ -49,6 +49,8 @@ dependencies:
   connectivity: ^3.0.6
   http_interceptor: ^1.0.1
   provider: ^6.1.2
+  get: ^4.6.6
+  flutter_bloc: ^8.1.5
  # auto_size_text: ^3.0.0
 
 dev_dependencies:
